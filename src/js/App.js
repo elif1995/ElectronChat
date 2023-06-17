@@ -8,6 +8,7 @@ import Settings from "./views/settings";
 import ChatView from "./views/Chat";
 
 import { listenToAuthChanges } from "./actions/auth";
+import { listenToConnectionChanges } from "./actions/app";
 import LoadingView from "./components/shared/LoadingVIew";
 
 import { 
@@ -27,23 +28,22 @@ function ChatApp() {
 
  const dispatch = useDispatch()
  const isChecking = useSelector(({auth})=>auth.isChecking)
-
- const alertOnlineStatus = () => {
-  window.alert(navigator.onLine ? "Online" : "Offline")
- }
+ const isOnline = useSelector(({app})=> app.isOnline)
 
   useEffect(()=>{
     const unsubFromAuth = dispatch(listenToAuthChanges());
 
-    window.addEventListener('online', alertOnlineStatus)
-    window.addEventListener('offline', alertOnlineStatus)
-
+    const unsubFromConnection = dispatch(listenToConnectionChanges)
     return  () => {
       unsubFromAuth()
-      window.removeEventListener('online', alertOnlineStatus)
-      window.removeEventListener('offline', alertOnlineStatus) 
+      unsubFromConnection()
     }
   },[dispatch])
+
+  
+  if(!isOnline){
+    return <LoadingView message="App is disconnected from the internet"/>
+  }
 
   if(isChecking){
     return <LoadingView/>

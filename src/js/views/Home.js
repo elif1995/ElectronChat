@@ -3,12 +3,12 @@ import React, { useEffect } from 'react';
 import JoinedChatsList from '../components/JoinedChatsList';
 import AvailableChatsList from '../components/AvailableChatsList';
 import ViewTitle from '../components/shared/ViewTitle';
+import {withBaseLayout}  from "../layouts/Base";
 
 import { useDispatch, useSelector } from 'react-redux';
 
 import { fetchChats } from '../actions/chats';
-import {withBaseLayout}  from "../layouts/Base";
-
+import Notification from '../utils/notifications';
 
 
 function Home(){
@@ -16,6 +16,7 @@ function Home(){
   const chats = useSelector( state => state.chats.items)
 
   useEffect(() => {
+    Notification.setup()
     dispatch(fetchChats())
   },[dispatch])
   
