@@ -6,6 +6,7 @@ import HomeView from "./views/Home";
 import WelcomeView from "./views/Welcome";
 import Settings from "./views/settings";
 import ChatView from "./views/Chat";
+import ChatCreate from "./views/ChatCreate";
 
 import { listenToAuthChanges } from "./actions/auth";
 import { listenToConnectionChanges } from "./actions/app";
@@ -58,6 +59,12 @@ function ChatApp() {
                 <AuthRoute>
                   <HomeView/>
                 </AuthRoute>} 
+                />
+                <Route path="/chatCreate" element={
+                  <AuthRoute>
+                    <ChatCreate/>
+                  </AuthRoute>
+                }
                 />
 
                 <Route path="/chat/:id" element={
