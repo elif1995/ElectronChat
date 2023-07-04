@@ -34,7 +34,7 @@ function ChatApp() {
   useEffect(()=>{
     const unsubFromAuth = dispatch(listenToAuthChanges());
 
-    const unsubFromConnection = dispatch(listenToConnectionChanges)
+    const unsubFromConnection = dispatch(listenToConnectionChanges())
     return  () => {
       unsubFromAuth()
       unsubFromConnection()
