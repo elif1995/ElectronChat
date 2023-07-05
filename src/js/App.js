@@ -10,6 +10,7 @@ import ChatCreate from "./views/ChatCreate";
 
 import { listenToAuthChanges } from "./actions/auth";
 import { listenToConnectionChanges } from "./actions/app";
+import { checkUserConnection } from "./actions/connection";
 import LoadingView from "./components/shared/LoadingVIew";
 
 import { 
@@ -29,18 +30,31 @@ function ChatApp() {
 
  const dispatch = useDispatch()
  const isChecking = useSelector(({auth})=>auth.isChecking)
- const isOnline = useSelector(({app})=> app.isOnline)
+ const isOnline = useSelector(({app})=> app.isOnline);
+ const user = useSelector(({auth})=> auth.user)
 
   useEffect(()=>{
     const unsubFromAuth = dispatch(listenToAuthChanges());
-
     const unsubFromConnection = dispatch(listenToConnectionChanges())
+
     return  () => {
-      unsubFromAuth()
-      unsubFromConnection()
+      unsubFromAuth();
+      unsubFromConnection();
+      
     }
   },[dispatch])
 
+  useEffect(()=>{
+    let unsubFromUserConnection;
+    if(user?.uid){
+      const unsubFromUserConnection = dispatch(checkUserConnection(user.uid))
+    }
+
+    return () => {
+      unsubFromUserConnection && unsubFromUserConnection();
+    }
+
+  },[dispatch, user])
   
   if(!isOnline){
     return <LoadingView message="App is disconnected from the internet"/>

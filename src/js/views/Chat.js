@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,18 +8,43 @@ import ChatMessagesList from '../components/ChatMessagesList';
 import ViewTitle from '../components/shared/ViewTitle';
 import {withBaseLayout} from "../layouts/Base";
 
-import { subscribeToChat } from "../actions/chats";
+import { subscribeToChat, subscribeToProfile } from "../actions/chats";
 function Chat(){
   const {id} = useParams()
+  const peopleWatchers = useRef({})
   const dispatch = useDispatch()
   const activeChat = useSelector(({chats}) => chats.activeChats[id])
+  const joinedUsers = activeChat?.joinedUsers
 
   useEffect(() => {
     const unsubFromChat = dispatch(subscribeToChat(id))
     return () => {
       unsubFromChat()
+      unsubFromJoinedUser()
     }
   },[])
+
+  useEffect(()=>{
+    joinedUsers && subscribeToJoinedUsers(joinedUsers)
+  },[joinedUsers])
+
+  const subscribeToJoinedUsers = (jUsers) => {
+    jUsers.forEach(user => {
+      
+      if(!peopleWatchers.current[user.uid]){
+        
+        peopleWatchers.current[user.uid] = dispatch(subscribeToProfile(user.uid))
+      }
+    });
+  }
+
+  const unsubFromJoinedUser = () => {
+    Object.keys(peopleWatchers.current)
+      .forEach(id => {
+        
+        peopleWatchers.current[id]()})
+  }
+
   return(
     <div className="row no-gutters fh">
       <div className="col-3 fh">

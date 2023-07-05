@@ -1,3 +1,4 @@
+import { useDebugValue } from 'react'
 import * as api from '../api/chats'
 import db from '../db/firestore'
 
@@ -56,6 +57,14 @@ export const joinChat = (chat, uid) => dispatch =>
  
      chat.joinedUsers = joinedUsers
      dispatch({type: 'CHATS_SET_ACTIVE_CHAT', chat})
+   })
+ }
+
+ export const subscribeToProfile = uid => dispatch => {
+
+   return api.subscribeToProfile(uid, user => {
+     console.log('changing profile')
+     dispatch({type: 'CHATS_UPDATE_USER_STATE', user})
    })
  }
  
