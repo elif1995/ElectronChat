@@ -1,4 +1,5 @@
-import React, {useState} from "react"
+import React, {useState} from "react";
+import { createTimestamp } from "../utils/time";
 
 export default function Messanger({onSubmit}){
   const [value, setValue] = useState('')
@@ -6,9 +7,21 @@ export default function Messanger({onSubmit}){
   const onKeyPress = e => {
     if(e.key === "Enter"){
       e.preventDefault()
-      onSubmit(value)
+      sendMessage()
       setValue('')
     }
+  }
+
+  const sendMessage = () => {
+    if(value.trim() === ''){return;}
+
+    const message = {
+      content : value.trim(),
+      timestamp: createTimestamp(),
+      
+    }
+
+    onSubmit(message)
   }
 
 

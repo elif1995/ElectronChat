@@ -14,6 +14,9 @@ const config = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
+export const {Timestamp} = firebase.firestore;
+
+
 // Initialize Firebase
 const db = firebase.initializeApp(config).firestore();
 export default db

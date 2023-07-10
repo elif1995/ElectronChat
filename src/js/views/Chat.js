@@ -8,18 +8,27 @@ import ChatMessagesList from '../components/ChatMessagesList';
 import ViewTitle from '../components/shared/ViewTitle';
 import {withBaseLayout} from "../layouts/Base";
 
-import { subscribeToChat, subscribeToProfile } from "../actions/chats";
+import { 
+  subscribeToChat, 
+  subscribeToProfile, 
+  sendChatMessage,
+  subscribeToMessage 
+} from "../actions/chats";
+
 import LoadingView from "../components/shared/LoadingVIew";
 import Messanger from "../components/Messenger";
+
 function Chat(){
   const {id} = useParams()
   const peopleWatchers = useRef({})
   const dispatch = useDispatch()
   const activeChat = useSelector(({chats}) => chats.activeChats[id])
+  const messages = useSelector(({chats}) => chats.messages[id])
   const joinedUsers = activeChat?.joinedUsers
 
   useEffect(() => {
     const unsubFromChat = dispatch(subscribeToChat(id))
+    dispatch(subscribeToMessage(id))
     return () => {
       unsubFromChat()
       unsubFromJoinedUser()
@@ -41,7 +50,7 @@ function Chat(){
   },[dispatch, id])
 
   const sendMessage = message => {
-    alert(message)
+    dispatch(sendChatMessage(message,id))
   }
 
   const unsubFromJoinedUser = useCallback(() => {
@@ -62,7 +71,7 @@ function Chat(){
       </div>
       <div className="col-9 fh">
         <ViewTitle text = {`channel: ${activeChat?.name}`}/>
-        <ChatMessagesList />
+        <ChatMessagesList messages={messages} />
         <Messanger onSubmit={sendMessage}/>
       </div>
     </div>
