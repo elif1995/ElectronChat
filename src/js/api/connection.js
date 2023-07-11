@@ -16,11 +16,10 @@ export const setUserOnlineStatus = (uid, isOnline) => {
   return userRef.update(updateData)
 }
 
-export const onConnectionChanged = onConnection => {
-  firebase.database()
+export const onConnectionChanged = onConnection => 
+ firebase.database()
     .ref('.info/connected')
     .on('value', snapshot => {
       const isConnected = snapshot?.val() ? snapshot.val() : false;
       onConnection(isConnected)
   })
-}

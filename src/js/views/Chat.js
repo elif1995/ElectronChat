@@ -12,7 +12,8 @@ import {
   subscribeToChat, 
   subscribeToProfile, 
   sendChatMessage,
-  subscribeToMessage 
+  subscribeToMessage,
+  registerMessageSubscription 
 } from "../actions/chats";
 
 import LoadingView from "../components/shared/LoadingVIew";
@@ -21,14 +22,21 @@ import Messanger from "../components/Messenger";
 function Chat(){
   const {id} = useParams()
   const peopleWatchers = useRef({})
+  const messageList = useRef()
   const dispatch = useDispatch()
   const activeChat = useSelector(({chats}) => chats.activeChats[id])
-  const messages = useSelector(({chats}) => chats.messages[id])
+  const messages = useSelector(({chats}) => chats.messages[id] || [])
+  const messagesSub = useSelector(({chats}) => chats.messagesSubs[id])
   const joinedUsers = activeChat?.joinedUsers
 
   useEffect(() => {
     const unsubFromChat = dispatch(subscribeToChat(id))
-    dispatch(subscribeToMessage(id))
+
+    if(!messagesSub) {
+      const unsubFromMessages = dispatch(subscribeToMessage(id))
+      dispatch(registerMessageSubscription(id, unsubFromMessages))
+    }
+
     return () => {
       unsubFromChat()
       unsubFromJoinedUser()
@@ -51,6 +59,7 @@ function Chat(){
 
   const sendMessage = message => {
     dispatch(sendChatMessage(message,id))
+    .then(_ => messageList.current.scrollIntoView(false))
   }
 
   const unsubFromJoinedUser = useCallback(() => {
@@ -71,7 +80,7 @@ function Chat(){
       </div>
       <div className="col-9 fh">
         <ViewTitle text = {`channel: ${activeChat?.name}`}/>
-        <ChatMessagesList messages={messages} />
+        <ChatMessagesList innerRef={messageList} messages={messages} />
         <Messanger onSubmit={sendMessage}/>
       </div>
     </div>

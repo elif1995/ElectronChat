@@ -80,8 +80,7 @@ export const joinChat = (chat, uid) => dispatch =>
  }
 
  export const subscribeToMessage = (chatId) => (dispatch) => {
-  
-
+  debugger
   return api.subscribeToMessages(chatId, async changes => {
     
     const messages = changes.map(change => {
@@ -112,3 +111,9 @@ export const joinChat = (chat, uid) => dispatch =>
      
   })
  }
+
+ export const registerMessageSubscription = (chatId, messageSub) => ({
+  type: 'CHATS_REGISTER_MESSAGE_SUB',
+  sub: messageSub,
+  chatId
+ })

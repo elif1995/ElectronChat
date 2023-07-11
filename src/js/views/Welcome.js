@@ -10,6 +10,8 @@ export default function Welcome() {
   const [isLoginView, setIsLogin] = useState(true);
   const user = useSelector(({auth}) => auth.user)
 
+  
+
   useEffect(() => {
     if(user){
       return navigate('/home')

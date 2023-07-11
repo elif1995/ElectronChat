@@ -3,7 +3,7 @@ import firebase from "firebase/app"
 import 'firebase/auth'
 
 const createUserProfile = userProfile => {
-  db.collection('profiles')
+  return db.collection('profiles')
     .doc(userProfile.uid)
     .set(userProfile)
 }
@@ -29,5 +29,5 @@ export const login = async ({email, password}) => {
 export const logout = () => firebase.auth().signOut()
 
 export const onAuthStateChange = onAuth => {
-  firebase.auth().onAuthStateChanged(onAuth)
+  return firebase.auth().onAuthStateChanged(onAuth)
 }
