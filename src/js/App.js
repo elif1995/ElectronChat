@@ -3,15 +3,16 @@ import { Provider, useDispatch, useSelector} from "react-redux";
 import StoreProvider from "./store/StoreProvider";
 
 import HomeView from "./views/Home";
+import Settings from "./views/Settings";
 import WelcomeView from "./views/Welcome";
-import Settings from "./views/settings";
 import ChatView from "./views/Chat";
 import ChatCreate from "./views/ChatCreate";
+import LoadingView from "./components/shared/LoadingVIew";
 
 import { listenToAuthChanges } from "./actions/auth";
 import { listenToConnectionChanges } from "./actions/app";
 import { checkUserConnection } from "./actions/connection";
-import LoadingView from "./components/shared/LoadingVIew";
+import { loadInitialSettings } from "./actions/settings";
 
 import { 
   HashRouter as Router, 
@@ -34,6 +35,7 @@ function ChatApp() {
  const user = useSelector(({auth})=> auth.user)
 
   useEffect(()=>{
+    dispatch(loadInitialSettings());
     const unsubFromAuth = dispatch(listenToAuthChanges());
     const unsubFromConnection = dispatch(listenToConnectionChanges())
 
@@ -89,7 +91,7 @@ function ChatApp() {
 
                 <Route path="/settings" element={
                 <AuthRoute>
-                  <Settings/> 
+                  <Settings/>
                 </AuthRoute>}
                 />
                 
