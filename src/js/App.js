@@ -27,6 +27,15 @@ function AuthRoute({children}){
   return  user ? children : <Navigate to="/" />
 }
 
+const ContentWrapper = ({children}) => {
+  const isDarkTheme = useSelector(({settings})=>settings.isDarkTheme)
+
+  return(
+    <div className={`content-wrapper ${isDarkTheme ? 'dark' : 'light'}`} >{children}</div>
+    )
+
+}
+
 function ChatApp() {
 
  const dispatch = useDispatch()
@@ -68,7 +77,7 @@ function ChatApp() {
 
   return(
       <Router>
-          <div className='content-wrapper'>
+          <ContentWrapper>
             <Routes>
                 <Route path="/" element={<WelcomeView/>} exact/>
                 <Route path="/home" element={
@@ -96,7 +105,7 @@ function ChatApp() {
                 />
                 
             </Routes>
-          </div>
+            </ContentWrapper>
       </Router>
     
   )

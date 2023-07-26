@@ -9,6 +9,7 @@ export default function Welcome() {
   const navigate = useNavigate();
   const [isLoginView, setIsLogin] = useState(true);
   const user = useSelector(({auth}) => auth.user)
+  const entireState = useSelector((state) => state)
 
   
 
